@@ -1,0 +1,71 @@
+{% include "header.html" %}
+
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('{{post.img_url}}')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="post-heading">
+                    <h1>{{post.title}}</h1>
+                    <h2 class="subheading">{{post.subtitle}}</h2>
+                    <span class="meta">Posted by
+              <a href="#">{{post.author.name}}</a>
+              on {{post.date}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{{ ckeditor.load() }} {{ ckeditor.load(pkg_type="basic") }}
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                {{ post.body|safe }}
+                <hr>
+
+                <div class="clearfix">
+                    {% if admin == 1 %}
+                    <a class="btn btn-primary float-right" href="{{url_for('edit_post', post_id=post.id)}}">Edit Post</a> {% endif %}
+                </div>
+                <div>
+                    {% if is_active %}
+                    <div>leave comment</div>
+                    <form method="post">
+                        {{ ckeditor.create() }}
+                        <input type="submit" class="btn btn-primary">
+                    </form>
+                    <div>
+                        {% else %}
+                        <div> login or register to comment </div>
+                        {% endif%}
+                        <!--           Comments Area -->
+                        <div class="col-lg-8 col-md-10 mx-auto comment">
+                            <ul class="commentList">
+                                <li>
+                                    {% for i in comments %} {% if i.post_id == post.id %}
+                                    <div class="commenterImage">
+
+
+                                    </div>
+
+                                    <div class="commentText">
+                                        <span class="date sub-text">{{ i.author_id}}</span>
+                                        <p>{{ i.text }} {% if admin == 1 %}<a href="/comment_del/{{i.id}}/{{post.id}}">✘</a> {% endif %}</p>
+                                        {% endif %} {% endfor %}
+                                    </div>
+
+                                </li>
+                            </ul>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+</article>
+
+<hr> {% include "footer.html" %}
